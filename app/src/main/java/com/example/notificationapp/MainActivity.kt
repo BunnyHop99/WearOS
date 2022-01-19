@@ -28,6 +28,12 @@ import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.eclipse.paho.client.mqttv3.MqttMessage
 import java.io.UnsupportedEncodingException
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
+
+import com.google.android.gms.wearable.MessageEvent
+
+import org.eclipse.paho.client.mqttv3.MqttCallback
+import java.lang.Exception
 
 
 class MainActivity : Activity() {
@@ -85,21 +91,7 @@ class MainActivity : Activity() {
             val topic = topicStr
             val qos = 1
             try {
-                val subToken = client.subscribe(topic, qos)
-                subToken.actionCallback = object : IMqttActionListener {
-                    override fun onSuccess(asyncActionToken: IMqttToken) {
-                        // The message was published
-                        Toast.makeText(applicationContext,"suscrito",Toast.LENGTH_SHORT).show()
-                    }
-
-                    override fun onFailure(
-                        asyncActionToken: IMqttToken,
-                        exception: Throwable
-                    ) {
-                        // The subscription could not be performed, maybe the user was not
-                        // authorized to subscribe on the specified topic e.g. using wildcards
-                    }
-                }
+                client.subscribe(topic, qos)
             } catch (e: MqttException) {
                 e.printStackTrace()
             }
@@ -115,13 +107,13 @@ class MainActivity : Activity() {
             token.actionCallback = object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken) {
                     // We are connected
-                    Toast.makeText(applicationContext,"onSuccess",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext,"Connected",Toast.LENGTH_LONG).show()
                     setSubscription()
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
                     // Something went wrong e.g. connection timeout or firewall problems
-                    Toast.makeText(applicationContext,"onFailure",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext,"Connected failed",Toast.LENGTH_LONG).show()
                 }
             }
         } catch (e: MqttException) {
@@ -134,7 +126,7 @@ class MainActivity : Activity() {
             val topic = topicStr
             val message = "hola"
             try {
-                client.publish(topic, message.toByteArray(),0, false)
+                client.publish(topic, message.toByteArray(),1, false)
             } catch (e: MqttException) {
                 e.printStackTrace()
             }
@@ -171,14 +163,24 @@ class MainActivity : Activity() {
 
         val btnSend = findViewById<Button>(R.id.btn_newNotification)
         btnSend.setOnClickListener {
-            notificationManager.notify(notificationID, notification)
-        }
-
-        val btnPublish = findViewById<Button>(R.id.btn_publish)
-        btnPublish.setOnClickListener {
             publish()
         }
 
+        //subscribe
+        client.setCallback(object : MqttCallback {
+            override fun connectionLost(cause: Throwable) {
+
+            }
+
+            @Throws(Exception::class)
+            override fun messageArrived(topic: String, message: MqttMessage) {
+                notificationManager.notify(notificationID, notification)
+            }
+
+            override fun deliveryComplete(token: IMqttDeliveryToken) {
+
+            }
+        })
 
     }
 

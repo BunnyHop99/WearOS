@@ -25,12 +25,6 @@
             android:text="@string/send_notification"
             android:layout_gravity="center"
             android:padding="10dp"/>
-        <Button
-            android:id="@+id/btn_publish"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="publish"
-            />
 
     </FrameLayout>
 </androidx.wear.widget.BoxInsetLayout>
