@@ -16,11 +16,5 @@ class ReplyActivity : Activity() {
         binding = ActivityReplyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val intent = Intent(this, MainActivity::class.java)
-
-        Handler().postDelayed({
-            startActivity(intent)
-            finish()
-        }, 2000)
     }
 }
