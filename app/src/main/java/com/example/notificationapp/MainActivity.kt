@@ -67,7 +67,6 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener {
             manager.createNotificationChannel(channel)
     }
 
-
     lateinit var gestureDetector: GestureDetector
     var x2:Float = 0.0f
     var x1:Float = 0.0f
@@ -188,6 +187,7 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener {
             @Throws(Exception::class)
             override fun messageArrived(topic: String, message: MqttMessage) {
                 notificationManager.notify(notificationID, notification)
+
                 guardarNot()
             }
 

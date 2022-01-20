@@ -8,8 +8,11 @@ import android.view.View
 import com.example.notificationapp.databinding.ActivityListBinding
 
 import android.widget.*
+import android.widget.Toast
 
-
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemClickListener
+import android.widget.AdapterView.OnItemLongClickListener
 
 class ListActivity : Activity() {
 
@@ -34,30 +37,24 @@ class ListActivity : Activity() {
 
         val arrayAdapter :ArrayAdapter<*>
         val notificacionesLista : MutableList<String> = mutableListOf()
-        val lvDatos = findViewById<ListView>(R.id.LvDatos)
+
+        val lvDatos = findViewById<View>(R.id.LvDatos) as ListView
 
         arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, notificacionesLista)
         lvDatos.adapter = arrayAdapter
 
-        fun removeItem(remove:Int){
-            notificacionesLista.removeAt(remove)
-            arrayAdapter.notifyDataSetChanged()
-        }
-
-        if (key == 1){
-            notificacionesLista.add(savedTable.toString())
-        } else if (key == 2){
-            notificacionesLista.add(savedKitchen.toString())
-        } else if (key == 3){
+        fun putElement(){
             notificacionesLista.add(savedBar.toString())
+            notificacionesLista.add(savedKitchen.toString())
+            notificacionesLista.add(savedTable.toString())
         }
 
-        lvDatos.setOnItemClickListener(){parent,view,position,id->
-            notificacionesLista.get(position)
-            removeItem(position)
-            editor.remove(savedTable)
+        lvDatos.onItemLongClickListener = OnItemLongClickListener { parent, view, position, arg3 ->
+            arrayAdapter.remove(notificacionesLista.get(position))
+            arrayAdapter.notifyDataSetChanged()
+            editor.remove("keybar")
             editor.apply()
+            false
         }
-
     }
 }
