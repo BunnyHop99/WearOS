@@ -24,7 +24,7 @@ class ListActivity : Activity() {
         val sharedPref = getSharedPreferences("preferences", MODE_PRIVATE)
         val editor : SharedPreferences.Editor = sharedPref.edit()
 
-        val savedKey = sharedPref.getString("key", null)
+        val savedKey = sharedPref.getInt("key", 0)
 
         val key = savedKey
 
@@ -44,24 +44,18 @@ class ListActivity : Activity() {
             arrayAdapter.notifyDataSetChanged()
         }
 
-        if (key == "keytable"){
-            if (savedTable != null) {
-                notificacionesLista.add(savedTable)
-            }
-        } else if (key == "keykitchen"){
-            if (savedKitchen != null) {
-                notificacionesLista.add(savedKitchen)
-            }
-        } else if (key == "keybar"){
-            if (savedBar != null) {
-                notificacionesLista.add(savedBar)
-            }
+        if (key == 1){
+            notificacionesLista.add(savedTable.toString())
+        } else if (key == 2){
+            notificacionesLista.add(savedKitchen.toString())
+        } else if (key == 3){
+            notificacionesLista.add(savedBar.toString())
         }
 
         lvDatos.setOnItemClickListener(){parent,view,position,id->
             notificacionesLista.get(position)
             removeItem(position)
-            editor.remove(key)
+            editor.remove(savedTable)
             editor.apply()
         }
 
