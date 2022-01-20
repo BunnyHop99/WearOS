@@ -76,6 +76,10 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener {
         const val MIN_DISTANCE = 150
     }
 
+    //Varibales notificaciones
+
+    var key : String = "key"
+
     private lateinit var binding: ActivityMainBinding
 
     @SuppressLint("UnspecifiedImmutableFlag")
@@ -87,11 +91,13 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener {
 
         gestureDetector = GestureDetector(this, this)
 
+        val sharedPreferences : SharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+        val editor : SharedPreferences.Editor = sharedPreferences.edit()
+
         fun guardarNot(){
-            val sharedPreferences : SharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-            val editor : SharedPreferences.Editor = sharedPreferences.edit()
-            editor.putString("keytable", "Mesa 4")
-            editor.putString("keykitchen", "Cocina")
+            editor.putString(key,"keykitchen")
+            editor.putString("keytable","Mesa4")
+            editor.putString("keykitchen","Cocina")
             editor.putString("keybar", "Bar")
             editor.apply()
         }

@@ -1,6 +1,7 @@
 package com.example.notificationapp
 
 import android.app.Activity
+import android.content.SharedPreferences
 
 import android.os.Bundle
 import android.view.View
@@ -21,6 +22,11 @@ class ListActivity : Activity() {
         setContentView(binding.root)
 
         val sharedPref = getSharedPreferences("preferences", MODE_PRIVATE)
+        val editor : SharedPreferences.Editor = sharedPref.edit()
+
+        val savedKey = sharedPref.getString("key", null)
+
+        val key = savedKey
 
         val savedTable = sharedPref.getString("keytable", null)
         val savedKitchen = sharedPref.getString("keykitchen", null)
@@ -38,19 +44,25 @@ class ListActivity : Activity() {
             arrayAdapter.notifyDataSetChanged()
         }
 
-        if (savedTable != null) {
-            notificacionesLista.add(savedTable)
-        }
-        if (savedKitchen != null) {
-            notificacionesLista.add(savedKitchen)
-        }
-        if (savedBar != null) {
-            notificacionesLista.add(savedBar)
+        if (key == "keytable"){
+            if (savedTable != null) {
+                notificacionesLista.add(savedTable)
+            }
+        } else if (key == "keykitchen"){
+            if (savedKitchen != null) {
+                notificacionesLista.add(savedKitchen)
+            }
+        } else if (key == "keybar"){
+            if (savedBar != null) {
+                notificacionesLista.add(savedBar)
+            }
         }
 
         lvDatos.setOnItemClickListener(){parent,view,position,id->
-                notificacionesLista.get(position)
-                removeItem(position)
+            notificacionesLista.get(position)
+            removeItem(position)
+            editor.remove(key)
+            editor.apply()
         }
 
     }
