@@ -8,4 +8,5 @@
     <string name="send_notification">Send Notification</string>
     <string name="title_activity_reply">ReplyActivity</string>
     <string name="title_activity_list">ListActivity</string>
+    <string name="title_activity_loading">LoadingActivity</string>
 </resources>

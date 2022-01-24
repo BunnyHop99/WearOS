@@ -12,13 +12,14 @@ import android.os.Bundle
 
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.view.View
+import android.widget.*
 
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.notificationapp.databinding.ActivityMainBinding
+
+import com.google.android.gms.auth.api.signin.internal.Storage
 
 import org.eclipse.paho.android.service.MqttAndroidClient
 
@@ -34,25 +35,28 @@ import org.eclipse.paho.client.mqttv3.MqttMessage
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 
-
 import org.eclipse.paho.client.mqttv3.MqttCallback
 import java.lang.Exception
 import java.lang.Math.abs
+import android.widget.TextView
+import android.view.LayoutInflater
 
+import android.widget.RelativeLayout
 
 
 class MainActivity : Activity(), GestureDetector.OnGestureListener {
 
+    private lateinit var storage : Storage
+
     private var channelID = "channelID"
     private var channelName = "channelName"
-
     private var notificationID = 10
 
     //Broker data
     private val MQTTHOST : String = "wss://awesome-engineer.cloudmqtt.com:443/mqtt"
     private val USERNAME : String = "vinnyiht"
     private val PASSWORD : String = "pmH4p_mZ-ae3"
-    val topicStr : String = "topic"
+    val topicStr : String = "OTHER"
 
     private fun createNotificationChannel() {
 
@@ -76,6 +80,7 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener {
     }
 
     private lateinit var binding: ActivityMainBinding
+    //shared preferences
 
     @SuppressLint("UnspecifiedImmutableFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,30 +91,22 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener {
 
         gestureDetector = GestureDetector(this, this)
 
-        val sharedPreferences : SharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        val editor : SharedPreferences.Editor = sharedPreferences.edit()
-
-        fun guardarNot(){
-            editor.putInt("key", 3)
-            editor.putString("keytable","Mesa4")
-            editor.putString("keykitchen","Cocina")
-            editor.putString("keybar", "Bar")
-            editor.apply()
+        val sharedPreferences = getPreferences(Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        fun savedNotification(): String? {
+            return sharedPreferences.getString("key", null)
         }
 
-        val statusText = findViewById<TextView>(R.id.statusText)
-
         //Configuracion MQTT
-
+        val statusText = findViewById<TextView>(R.id.statusText)
         val clientId = MqttClient.generateClientId()
-
-        val client = MqttAndroidClient(this.applicationContext, MQTTHOST,clientId)
+        val client = MqttAndroidClient(this.applicationContext, MQTTHOST, clientId)
 
         //MQTT Subscribe
 
-        fun setSubscription(){
+        fun setSubscription() {
             val topic = topicStr
-            val qos = 1
+            val qos = 0
             try {
                 client.subscribe(topic, qos)
             } catch (e: MqttException) {
@@ -137,7 +134,7 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener {
                 @SuppressLint("SetTextI18n")
                 override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
                     // Something went wrong e.g. connection timeout or firewall problems
-                    Toast.makeText(applicationContext,"Connected failed",Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, "Connected failed", Toast.LENGTH_LONG).show()
                     statusText.text = "Disconnected"
                     statusText.setTextColor(Color.parseColor("#FF0000"))
                 }
@@ -149,11 +146,11 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener {
 
         //MQTT Publish
 
-        fun publish(){
+        fun publish() {
             val topic = topicStr
-            val message = "hola"
+            val message = "Mesa 4"
             try {
-                client.publish(topic, message.toByteArray(),1, false)
+                client.publish(topic, message.toByteArray(), 0, false)
             } catch (e: MqttException) {
                 e.printStackTrace()
             }
@@ -163,7 +160,8 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener {
 
         val notification = NotificationCompat.Builder(this, channelID).also {
             val resultIntent = Intent(this, ListActivity::class.java)
-            val resultPendingIntent = PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val resultPendingIntent =
+                PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
             it.setSmallIcon(R.drawable.ic_message)
             it.setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
             it.priority = NotificationCompat.PRIORITY_HIGH
@@ -171,7 +169,7 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener {
             it.setContentIntent(resultPendingIntent)
         }.build()
 
-        val notificationManager : NotificationManagerCompat = NotificationManagerCompat.from(this)
+        val notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
 
         val btnSend = findViewById<Button>(R.id.btn_newNotification)
         btnSend.setOnClickListener {
@@ -181,14 +179,15 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener {
         //subscribe
         client.setCallback(object : MqttCallback {
             override fun connectionLost(cause: Throwable) {
-                Toast.makeText(applicationContext,"Connection lost",Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, "Connection lost", Toast.LENGTH_LONG).show()
             }
 
             @Throws(Exception::class)
             override fun messageArrived(topic: String, message: MqttMessage) {
                 notificationManager.notify(notificationID, notification)
-
-                guardarNot()
+                editor.putString("key", message.toString())
+                editor.apply()
+                putElement(savedNotification().toString())
             }
 
             override fun deliveryComplete(token: IMqttDeliveryToken) {
@@ -198,6 +197,7 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener {
 
     }
 
+    //GESTOS
     override fun onTouchEvent(event: MotionEvent?): Boolean {
 
         gestureDetector.onTouchEvent(event)
@@ -231,8 +231,9 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener {
         return false
     }
 
-    override fun onShowPress(p0: MotionEvent?) {
-        TODO("Not yet implemented")
+    override fun onShowPress(p0: MotionEvent?){
+        //TODO("Not yet implemented")
+        return
     }
 
 
@@ -253,6 +254,7 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener {
 
     override fun onLongPress(p0: MotionEvent?) {
         //TODO("Not yet implemented")
+        return
     }
 
     override fun onFling(

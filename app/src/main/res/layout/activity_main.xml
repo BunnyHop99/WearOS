@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="#339ee4"
     android:padding="@dimen/box_inset_layout_padding"
     tools:context=".MainActivity"
     tools:deviceIds="wear">
@@ -28,12 +28,13 @@
             android:id="@+id/btn_newNotification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
+            android:textColor="#ffffff"
             android:textStyle="bold"
             android:textSize="15dp"
             android:text="@string/send_notification"
             android:layout_gravity="center"
             android:padding="10dp"/>
+
 
     </FrameLayout>
 </androidx.wear.widget.BoxInsetLayout>

@@ -4,20 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:padding="@dimen/box_inset_layout_padding"
-    android:background="#339ee4"
-    tools:context=".ListActivity"
+    tools:context=".LoadingActivity"
     tools:deviceIds="wear">
-
-    <TextView
-        android:text="NOTIFICACIONES"
-        android:textStyle="bold"
-        android:textColor="#ffffff"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|top"
-        android:paddingTop="15dp"
-        />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -25,11 +15,11 @@
         android:padding="@dimen/inner_frame_layout_padding"
         app:layout_boxedEdges="all">
 
-        <ListView
-            android:id="@+id/LvDatos"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/loading1" />
     </FrameLayout>
 </androidx.wear.widget.BoxInsetLayout>

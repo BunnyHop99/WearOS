@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Andy/AndroidStudioProjects/NotificationApp/app/src/main/res/drawable-anydpi/ic_message.xml" value="1.9071428571428573" />
         <entry key="..\:/Users/Andy/AndroidStudioProjects/NotificationApp/app/src/main/res/layout/activity_list.xml" value="0.8338815789473685" />
+        <entry key="..\:/Users/Andy/AndroidStudioProjects/NotificationApp/app/src/main/res/layout/activity_loading.xml" value="0.78125" />
         <entry key="..\:/Users/Andy/AndroidStudioProjects/NotificationApp/app/src/main/res/layout/activity_main.xml" value="0.8178571428571428" />
         <entry key="..\:/Users/Andy/AndroidStudioProjects/NotificationApp/app/src/main/res/layout/activity_reply.xml" value="0.868421052631579" />
       </map>

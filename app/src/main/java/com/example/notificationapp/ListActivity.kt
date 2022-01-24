@@ -1,6 +1,7 @@
 package com.example.notificationapp
 
 import android.app.Activity
+import android.content.Context
 import android.content.SharedPreferences
 
 import android.os.Bundle
@@ -13,6 +14,12 @@ import android.widget.Toast
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemLongClickListener
+import com.google.android.gms.auth.api.signin.internal.Storage
+import android.widget.TextView
+
+import android.view.LayoutInflater
+import java.lang.Override as Override1
+
 
 class ListActivity : Activity() {
 
@@ -24,37 +31,17 @@ class ListActivity : Activity() {
         binding = ActivityListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val sharedPref = getSharedPreferences("preferences", MODE_PRIVATE)
-        val editor : SharedPreferences.Editor = sharedPref.edit()
-
-        val savedKey = sharedPref.getInt("key", 0)
-
-        val key = savedKey
-
-        val savedTable = sharedPref.getString("keytable", null)
-        val savedKitchen = sharedPref.getString("keykitchen", null)
-        val savedBar = sharedPref.getString("keybar", null)
-
-        val arrayAdapter :ArrayAdapter<*>
-        val notificacionesLista : MutableList<String> = mutableListOf()
-
-        val lvDatos = findViewById<View>(R.id.LvDatos) as ListView
+        val arrayAdapter: ArrayAdapter<*>
+        val lista = findViewById<ListView>(R.id.LvDatos)
 
         arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, notificacionesLista)
-        lvDatos.adapter = arrayAdapter
+        lista.adapter = arrayAdapter
 
-        fun putElement(){
-            notificacionesLista.add(savedBar.toString())
-            notificacionesLista.add(savedKitchen.toString())
-            notificacionesLista.add(savedTable.toString())
-        }
-
-        lvDatos.onItemLongClickListener = OnItemLongClickListener { parent, view, position, arg3 ->
-            arrayAdapter.remove(notificacionesLista.get(position))
-            arrayAdapter.notifyDataSetChanged()
-            editor.remove("keybar")
-            editor.apply()
-            false
-        }
+        lista.setOnItemLongClickListener(OnItemLongClickListener { arg0, arg1, pos, id -> // TODO Auto-generated method stub
+            delElement(pos)
+            arrayAdapter.notifyDataSetChanged();
+            Toast.makeText(this, "Mesero en camino", Toast.LENGTH_LONG).show()
+            true
+        })
     }
 }
