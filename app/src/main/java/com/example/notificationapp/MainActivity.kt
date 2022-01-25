@@ -56,7 +56,7 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener {
     private val MQTTHOST : String = "wss://awesome-engineer.cloudmqtt.com:443/mqtt"
     private val USERNAME : String = "vinnyiht"
     private val PASSWORD : String = "pmH4p_mZ-ae3"
-    val topicStr : String = "OTHER"
+    val topicStr : String = "testrest"
 
     private fun createNotificationChannel() {
 
